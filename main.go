@@ -14,13 +14,11 @@ func main() {
 
 	var configFile = "config.yaml"
 	var inputFile = ""
-	var checkpointFile = ""
 
 	flaggy.String(&configFile, "c", "config", "Configuration file. See config.example.yaml for more details.")
 
 	subcommandTweetsDeleteUsingCsv := flaggy.NewSubcommand("tweets:delete:using_csv")
 	subcommandTweetsDeleteUsingCsv.Description = "Deletes tweets using a CSV file as a data source"
-	subcommandTweetsDeleteUsingCsv.String(&checkpointFile, "p", "checkpoint-file", "Path to checkpoint file. It's a single line file where ID of the last deleted tweet is saved.")
 	subcommandTweetsDeleteUsingCsv.String(&inputFile, "i", "input-file", "Path to CSV file where each line is ID of tweet to delete")
 	flaggy.AttachSubcommand(subcommandTweetsDeleteUsingCsv, 1)
 
@@ -33,6 +31,6 @@ func main() {
 	}
 
 	if subcommandTweetsDeleteUsingCsv.Used {
-		delete_using_csv.MustRun(inputFile, checkpointFile)
+		delete_using_csv.MustRun(inputFile)
 	}
 }

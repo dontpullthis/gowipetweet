@@ -1,5 +1,5 @@
 auth:
-    consumer_key:
-    consumer_key_secret:
-    token:
-    token_secret:
+    consumer_key: # paste it from your application settings on Twitter Developer Portal
+    consumer_key_secret: # paste it from your application settings on Twitter Developer Portal
+    token: # This will be filled when you authorize the app by entering PIN code from browser
+    token_secret: # This will be filled when you authorize the app by entering PIN code from browser

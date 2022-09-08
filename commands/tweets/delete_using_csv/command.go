@@ -10,7 +10,7 @@ import (
 	"github.com/dontpullthis/gowipetweet/client/twitter"
 )
 
-func MustRun(inputFile string, checkpointFile string) {
+func MustRun(inputFile string) {
 	f, err := os.Open(inputFile)
 	if err != nil {
 		log.Fatal("Unable to read input file "+inputFile+". ", err)
