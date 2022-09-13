@@ -19,6 +19,14 @@ __Common parameters__
 
 - -c / --config - path to configuration file. See [config.example.yaml](config.example.yaml). Default value is `config.yaml`, so configuration file will be read from current directory.
 
+### Conversion of Javascript tweet dump file into JSON Lines
+
+Twitter provides dumps as JavaScript files which are inapproptiate for analysis and filtering of records. This command converts the original JavaScript file into [JSON Lines format](https://jsonlines.org/).
+
+```bash
+gowipetweettweets:dump:to_jsonl -c $PWD/.local/config.yaml -i /home/john/somefolder/twitter_dump/data/tweet.js -o /home/john/somefolder/twitter_dump_processed/tweets.js
+```
+
 ### Deletion of tweets using CSV file
 
 __Parameters__
@@ -31,5 +39,5 @@ gowipetweet tweets:delete:using_csv -c $PWD/.local/config.yaml -i /home/john/som
 
 ## TODO
 
-- Creation of CSV to-delete file from dump JSON file with tweets
+- Config file should NOT be mandatory for all commands. Only those commands which interact with Twitter API need it
 - Filtering of dump records, preferably using exression evaluation library (`Govaluate`?). The goal is to filter tweets using some customizable logic e.g. number of likes/retweets
