@@ -17,13 +17,12 @@ func main() {
 
 	flaggy.String(&config.ConfigPath, "c", "config", "Configuration file. See config.example.yaml for more details.")
 
-	subcommandTweetsDeleteUsingCsv := flaggy.NewSubcommand("tweets:delete:using_csv")
-	subcommandTweetsDeleteUsingCsv.Description = "Deletes tweets using a CSV file as a data source"
-	subcommandTweetsDeleteUsingCsv.String(&inputFile, "i", "input-file", "Path to CSV file where each line is ID of tweet to delete")
+	subcommandTweetsDeleteUsingCsv := delete_using_csv.New(&inputFile)
 	flaggy.AttachSubcommand(subcommandTweetsDeleteUsingCsv, 1)
 
 	flaggy.Parse()
 
+	// config.MustInitialize must be initialized AFTER flaggy.Parse() call to receive a valid path to config file
 	config.MustInitialize()
 
 	if subcommandTweetsDeleteUsingCsv.Used {
