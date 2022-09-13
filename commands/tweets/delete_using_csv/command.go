@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/dontpullthis/gowipetweet/client/twitter"
+	"github.com/dontpullthis/gowipetweet/system/config"
 )
 
 func MustRun(inputFile string) {
@@ -17,6 +18,11 @@ func MustRun(inputFile string) {
 	}
 	defer f.Close()
 	csvReader := csv.NewReader(f)
+
+	cfg := config.GetConfig()
+	if twitter.MustInitialize(cfg) {
+		config.MustSave()
+	}
 
 	for {
 		var tweetIdLine, err = csvReader.Read()

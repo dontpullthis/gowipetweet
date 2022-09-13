@@ -3,19 +3,19 @@ package main
 import (
 	"github.com/integrii/flaggy"
 
-	"github.com/dontpullthis/gowipetweet/client/twitter"
 	"github.com/dontpullthis/gowipetweet/commands/tweets/delete_using_csv"
 	"github.com/dontpullthis/gowipetweet/system/config"
 )
 
-func main() {
-	flaggy.DefaultParser.ShowHelpOnUnexpected = false
+func init() {
+	flaggy.DefaultParser.ShowHelpOnUnexpected = true
 	flaggy.DefaultParser.ShowHelpWithHFlag = true
+}
 
-	var configFile = "config.yaml"
+func main() {
 	var inputFile = ""
 
-	flaggy.String(&configFile, "c", "config", "Configuration file. See config.example.yaml for more details.")
+	flaggy.String(&config.ConfigPath, "c", "config", "Configuration file. See config.example.yaml for more details.")
 
 	subcommandTweetsDeleteUsingCsv := flaggy.NewSubcommand("tweets:delete:using_csv")
 	subcommandTweetsDeleteUsingCsv.Description = "Deletes tweets using a CSV file as a data source"
@@ -24,11 +24,7 @@ func main() {
 
 	flaggy.Parse()
 
-	cfg := config.MustInitialize(configFile)
-
-	if twitter.MustInitialize(&cfg) {
-		config.MustSave(configFile, cfg)
-	}
+	config.MustInitialize()
 
 	if subcommandTweetsDeleteUsingCsv.Used {
 		delete_using_csv.MustRun(inputFile)
