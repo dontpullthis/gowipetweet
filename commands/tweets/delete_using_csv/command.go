@@ -35,6 +35,4 @@ func MustRun(inputFile string) {
 		fmt.Printf("Deleting tweet %s...\n", tweetIdLine[0])
 		twitter.ClientInstance.MustDeleteTweet(tweetIdLine[0])
 	}
-
-	return
 }
