@@ -4,7 +4,8 @@ import (
 	"bufio"
 	"log"
 	"os"
-	"strings"
+
+	"github.com/dontpullthis/gowipetweet/converter"
 )
 
 func MustRun(inputFile string, outputFile string) {
@@ -16,36 +17,15 @@ func MustRun(inputFile string, outputFile string) {
 
 	out, err := os.Create(outputFile)
 	if err != nil {
-		log.Fatal("Unable to read output file "+inputFile+". ", err)
+		log.Fatal("Unable to read output file "+outputFile+". ", err)
 	}
 	defer out.Close()
 
 	scanner := bufio.NewScanner(in)
+	writer := bufio.NewWriter(out)
 
-	scanner.Scan()
-	failOnScannerError(scanner)
-
-	nestingLevel := 0
-	for scanner.Scan() {
-		line := strings.TrimSpace(scanner.Text())
-
-		nestingLevel = nestingLevel + strings.Count(line, "{") - strings.Count(line, "}")
-		if 0 == nestingLevel {
-			if strings.HasSuffix(line, ",") { // end if element
-				line = line[:len(line)-1] + "\n"
-			} else if strings.HasSuffix(line, "]") {
-				// close square bracked at the end of file
-				// open bracket was eliminated by first invocation of scanner.Scan() method outside of loop
-				break
-			}
-		}
-		out.Write([]byte(line))
-	}
-	failOnScannerError(scanner)
-}
-
-func failOnScannerError(scanner *bufio.Scanner) {
-	if err := scanner.Err(); err != nil {
-		log.Fatal("An error occurret while reading the input file. ", err)
+	err = converter.JavascriptToJSONL(scanner, writer)
+	if err != nil {
+		log.Fatal("Failed to convert the '"+inputFile+"' to JSON Lines. ", err)
 	}
 }
