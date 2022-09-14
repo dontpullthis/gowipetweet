@@ -6,7 +6,7 @@ import (
 )
 
 func JavascriptToJSONL(s *bufio.Scanner, w *bufio.Writer) error {
-	s.Scan()
+	s.Scan() // skip the first line, as there is variable assignment + beginning of array
 	if s.Err() != nil {
 		return s.Err()
 	}
@@ -15,12 +15,23 @@ func JavascriptToJSONL(s *bufio.Scanner, w *bufio.Writer) error {
 	for s.Scan() {
 		line := strings.TrimSpace(s.Text())
 
-		nestingLevel = nestingLevel + strings.Count(line, "{") - strings.Count(line, "}")
+		// Looks up curly braces in string, BUT skips values between quotation marks
+		// The idea: to split by quotation marks and to skip items with even index
+		// Examples:
+		//   { "test": "ab{c" } -> SKIPS "test" and "ab{c", checks '  { ', ': ' and ' }
+		for i, part := range strings.Split(line, "\"") {
+			if i%2 == 1 {
+				continue
+			}
+
+			nestingLevel = nestingLevel + strings.Count(part, "{") - strings.Count(part, "}")
+		}
+
 		if 0 == nestingLevel {
 			if strings.HasSuffix(line, ",") { // end if element
 				line = line[:len(line)-1] + "\n"
 			} else if strings.HasSuffix(line, "]") {
-				// close square bracked at the end of file
+				// close square bracket at the end of file
 				// open bracket was eliminated by first invocation of scanner.Scan() method outside of loop
 				break
 			}
