@@ -15,7 +15,10 @@ func init() {
 }
 
 func main() {
-	var inputFile, outputFile = "", ""
+	var inputFile, outputFile, expression = "", "", ""
+
+	flaggy.SetName("gowipetweet")
+	flaggy.SetDescription("A utility for tweet deletion. Webpage: https://github.com/dontpullthis/gowipetweet")
 
 	flaggy.String(&config.ConfigPath, "c", "config", "Configuration file. See config.example.yaml for more details.")
 
@@ -25,7 +28,7 @@ func main() {
 	subcommandTweetsDeleteUsingCsv := delete_using_csv.New(&inputFile)
 	flaggy.AttachSubcommand(subcommandTweetsDeleteUsingCsv, 1)
 
-	subcommandTweetsToDeleteListFromJsonl := to_delete_list_from_jsonl.New(&inputFile, &outputFile)
+	subcommandTweetsToDeleteListFromJsonl := to_delete_list_from_jsonl.New(&inputFile, &outputFile, &expression)
 	flaggy.AttachSubcommand(subcommandTweetsToDeleteListFromJsonl, 1)
 
 	flaggy.Parse()
@@ -38,6 +41,6 @@ func main() {
 	} else if subcommandTweetsDeleteUsingCsv.Used {
 		delete_using_csv.MustRun(inputFile)
 	} else if subcommandTweetsToDeleteListFromJsonl.Used {
-		to_delete_list_from_jsonl.MustRun(inputFile, outputFile)
+		to_delete_list_from_jsonl.MustRun(inputFile, outputFile, expression)
 	}
 }

@@ -6,6 +6,7 @@ require (
 	github.com/dghubble/go-twitter v0.0.0-20220816163853-8a0df96f1e6d
 	github.com/dghubble/oauth1 v0.7.1
 	github.com/integrii/flaggy v1.5.2
+	github.com/knetic/govaluate v3.0.0+incompatible
 	gopkg.in/yaml.v3 v3.0.1
 )
 
