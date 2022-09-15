@@ -5,6 +5,7 @@ import (
 
 	"github.com/dontpullthis/gowipetweet/commands/tweets/delete_using_csv"
 	"github.com/dontpullthis/gowipetweet/commands/tweets/dump_to_jsonl"
+	"github.com/dontpullthis/gowipetweet/commands/tweets/to_delete_list_from_jsonl"
 	"github.com/dontpullthis/gowipetweet/system/config"
 )
 
@@ -22,7 +23,10 @@ func main() {
 	flaggy.AttachSubcommand(subcommandTweetsDumpToJsonl, 1)
 
 	subcommandTweetsDeleteUsingCsv := delete_using_csv.New(&inputFile)
-	flaggy.AttachSubcommand(subcommandTweetsDeleteUsingCsv, 2)
+	flaggy.AttachSubcommand(subcommandTweetsDeleteUsingCsv, 1)
+
+	subcommandTweetsToDeleteListFromJsonl := to_delete_list_from_jsonl.New(&inputFile, &outputFile)
+	flaggy.AttachSubcommand(subcommandTweetsToDeleteListFromJsonl, 1)
 
 	flaggy.Parse()
 
@@ -33,5 +37,7 @@ func main() {
 		dump_to_jsonl.MustRun(inputFile, outputFile)
 	} else if subcommandTweetsDeleteUsingCsv.Used {
 		delete_using_csv.MustRun(inputFile)
+	} else if subcommandTweetsToDeleteListFromJsonl.Used {
+		to_delete_list_from_jsonl.MustRun(inputFile, outputFile)
 	}
 }
