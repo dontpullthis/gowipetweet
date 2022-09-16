@@ -19,6 +19,13 @@ __Common parameters__
 
 - -c / --config - path to configuration file. See [config.example.yaml](config.example.yaml). Default value is `config.yaml`, so configuration file will be read from current directory.
 
+### A typical workflow
+- Register a client Twitter app at https://developer.twitter.com, obtain consumer API keys, save them to [config.yaml](config.example.yaml)
+- Generate and download a twitter archive: [Link](https://help.twitter.com/en/managing-your-account/how-to-download-your-twitter-archive)
+- Convert the `data/tweet.json` file from arctive to JSON Lines format
+- Generate a list of tweets to delete from JSON Lines file by filtering tweets
+- Delete tweets using a list file
+
 ### Conversion of Javascript tweet dump file into JSON Lines
 
 Twitter provides dumps as JavaScript files which are inapproptiate for analysis and filtering of records. This command converts the original JavaScript file into [JSON Lines format](https://jsonlines.org/).
