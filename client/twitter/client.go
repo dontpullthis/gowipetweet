@@ -11,7 +11,7 @@ import (
 	"github.com/dontpullthis/gowipetweet/system/config"
 )
 
-var ClientInstance Client
+var ClientInstance *Client = nil
 
 type Client struct {
 	Client *twitter.Client
@@ -43,17 +43,14 @@ func (c Client) MustDeleteTweet(tweetIdString string) {
 	}
 }
 
-func MustInitialize(cfg *config.Config) bool {
-	isConfigUpdated := false
-	if cfg.Auth.Token == "" || cfg.Auth.TokenSecret == "" {
-		token, tokenSecret := mustGetTokens(cfg)
-		cfg.Auth.Token = token
-		cfg.Auth.TokenSecret = tokenSecret
-
-		isConfigUpdated = true
+func MustInitialize(cfg *config.Config) {
+	if ClientInstance != nil {
+		return
 	}
 
-	tokenObject := oauth1.NewToken(cfg.Auth.Token, cfg.Auth.TokenSecret)
+	token, tokenSecret := mustGetTokens(cfg)
+
+	tokenObject := oauth1.NewToken(token, tokenSecret)
 	config := oauth1.Config{
 		ConsumerKey:    cfg.Auth.ConsumerKey,
 		ConsumerSecret: cfg.Auth.ConsumerKeySecret,
@@ -62,7 +59,6 @@ func MustInitialize(cfg *config.Config) bool {
 	}
 	httpClient := config.Client(oauth1.NoContext, tokenObject)
 
-	ClientInstance = newClient(twitter.NewClient(httpClient))
-
-	return isConfigUpdated
+	c := newClient(twitter.NewClient(httpClient))
+	ClientInstance = &c
 }

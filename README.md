@@ -20,7 +20,7 @@ __Common parameters__
 - -c / --config - path to configuration file. See [config.example.yaml](config.example.yaml). Default value is `config.yaml`, so configuration file will be read from current directory.
 
 ### A typical workflow
-- Register a client Twitter app at https://developer.twitter.com, obtain consumer API keys, save them to [config.yaml](config.example.yaml)
+- Register a client Twitter app at https://developer.twitter.com, obtain consumer API keys, save them to [config.yaml](config.example.yaml). Note: it's NOT needed if you would like just to generate a list of tweets to delete without actual deletion; Twitter credentials are needed for API calls.
 - Generate and download a twitter archive: [Link](https://help.twitter.com/en/managing-your-account/how-to-download-your-twitter-archive)
 - Convert the `data/tweet.json` file from arctive to JSON Lines format
 - Generate a list of tweets to delete from JSON Lines file by filtering tweets
@@ -32,7 +32,6 @@ Twitter provides dumps as JavaScript files which are inapproptiate for analysis 
 
 ```bash
 gowipetweet tweets:dump:to_jsonl \
-    -c $PWD/.local/config.yaml \
     -i /home/john/somefolder/twitter_dump/data/tweet.js \
     -o /home/john/somefolder/twitter_dump_processed/tweets.js
 ```
@@ -41,7 +40,6 @@ gowipetweet tweets:dump:to_jsonl \
 
 ```bash
 gowipetweet tweets:to_delete_list:from_jsonl \
-    -c $PWD/.local/config.yaml \
     -i /home/john/somefolder/twitter_dump/tweets.json \
     -o /home/john/somefolder/twitter_dump/todo_delete.txt \
     -e "created_time >= '2022-01-01 00:00:00' && created_time < '2022-02-01 00:00:00'"
@@ -74,8 +72,3 @@ The [govaluate](https://github.com/Knetic/govaluate) library is used to parse ex
 favorite_count + (retweet_count * 20) > 100
 created_time >= '2022-01-01 00:00:00' && created_time < '2022-02-01 00:00:00'
 ```
-
-## TODO
-
-- Config file should NOT be mandatory for all commands. Only those commands which interact with Twitter API need it
-- Filtering of dump records, preferably using exression evaluation library (`Govaluate`?). The goal is to filter tweets using some customizable logic e.g. number of likes/retweets

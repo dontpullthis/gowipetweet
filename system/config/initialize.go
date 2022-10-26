@@ -7,7 +7,13 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-func MustInitialize() Config {
+var ConfigInstance *Config = nil
+
+func MustInitialize() *Config {
+	if nil != ConfigInstance {
+		return ConfigInstance
+	}
+
 	config = Config{}
 	yamlFile, err := ioutil.ReadFile(ConfigPath)
 	if err != nil {
@@ -18,5 +24,7 @@ func MustInitialize() Config {
 		log.Fatal("Failed to parse config file "+ConfigPath+". ", err)
 	}
 
-	return config
+	ConfigInstance = &config
+
+	return ConfigInstance
 }

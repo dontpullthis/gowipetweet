@@ -2,7 +2,6 @@ package delete_using_csv
 
 import (
 	"encoding/csv"
-	"fmt"
 	"io"
 	"log"
 	"os"
@@ -12,6 +11,8 @@ import (
 )
 
 func MustRun(inputFile string) {
+	log.Println("Deleting tweets using file '" + inputFile + "'...")
+
 	f, err := os.Open(inputFile)
 	if err != nil {
 		log.Fatal("Unable to read input file "+inputFile+". ", err)
@@ -19,10 +20,8 @@ func MustRun(inputFile string) {
 	defer f.Close()
 	csvReader := csv.NewReader(f)
 
-	cfg := config.GetConfig()
-	if twitter.MustInitialize(cfg) {
-		config.MustSave()
-	}
+	cfg := config.MustInitialize()
+	twitter.MustInitialize(cfg)
 
 	for {
 		var tweetIdLine, err = csvReader.Read()
@@ -32,7 +31,9 @@ func MustRun(inputFile string) {
 			log.Fatal("Failed to read a line from file "+inputFile+". ", err)
 		}
 
-		fmt.Printf("Deleting tweet %s...\n", tweetIdLine[0])
+		log.Printf("Deleting tweet %s...\n", tweetIdLine[0])
 		twitter.ClientInstance.MustDeleteTweet(tweetIdLine[0])
 	}
+
+	log.Println("Tweets were deleted successfully.")
 }

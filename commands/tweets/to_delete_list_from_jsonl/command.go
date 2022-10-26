@@ -12,6 +12,8 @@ import (
 const expr = "tweet.retweetCount() > 20"
 
 func MustRun(inputFile string, outputFile string, expr string) {
+	log.Println("Filtering JSON Lines record in file '" + inputFile + "'...")
+
 	in, err := os.Open(inputFile)
 	if err != nil {
 		log.Fatal("Unable to read input file "+inputFile+". ", err)
@@ -60,4 +62,6 @@ func MustRun(inputFile string, outputFile string, expr string) {
 		}
 		writer.Flush()
 	}
+
+	log.Println("Created a list of files to delete: " + outputFile)
 }

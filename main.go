@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	"github.com/integrii/flaggy"
 
 	"github.com/dontpullthis/gowipetweet/commands/tweets/delete_using_csv"
@@ -16,6 +18,8 @@ func init() {
 
 func main() {
 	var inputFile, outputFile, expression = "", "", ""
+
+	log.Println("Starting...")
 
 	flaggy.SetName("gowipetweet")
 	flaggy.SetDescription("A utility for tweet deletion. Webpage: https://github.com/dontpullthis/gowipetweet")
@@ -33,9 +37,6 @@ func main() {
 
 	flaggy.Parse()
 
-	// config.MustInitialize must be initialized AFTER flaggy.Parse() call to receive a valid path to config file
-	config.MustInitialize()
-
 	if subcommandTweetsDumpToJsonl.Used {
 		dump_to_jsonl.MustRun(inputFile, outputFile)
 	} else if subcommandTweetsDeleteUsingCsv.Used {
@@ -43,4 +44,6 @@ func main() {
 	} else if subcommandTweetsToDeleteListFromJsonl.Used {
 		to_delete_list_from_jsonl.MustRun(inputFile, outputFile, expression)
 	}
+
+	log.Println("Done.")
 }

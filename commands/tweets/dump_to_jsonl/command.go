@@ -9,6 +9,8 @@ import (
 )
 
 func MustRun(inputFile string, outputFile string) {
+	log.Println("Converting the file '" + inputFile + "' into JSON Lines format...")
+
 	in, err := os.Open(inputFile)
 	if err != nil {
 		log.Fatal("Unable to read input file "+inputFile+". ", err)
@@ -28,4 +30,6 @@ func MustRun(inputFile string, outputFile string) {
 	if err != nil {
 		log.Fatal("Failed to convert the '"+inputFile+"' to JSON Lines. ", err)
 	}
+
+	log.Println("Created a JSON Lines file: " + outputFile + ".")
 }
