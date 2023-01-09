@@ -5,6 +5,7 @@ import (
 
 	"github.com/integrii/flaggy"
 
+	likes_delete_using_api_list "github.com/dontpullthis/gowipetweet/commands/likes/delete_using_api_list"
 	"github.com/dontpullthis/gowipetweet/commands/tweets/delete_using_csv"
 	"github.com/dontpullthis/gowipetweet/commands/tweets/dump_to_jsonl"
 	"github.com/dontpullthis/gowipetweet/commands/tweets/to_delete_list_from_jsonl"
@@ -26,18 +27,23 @@ func main() {
 
 	flaggy.String(&config.ConfigPath, "c", "config", "Configuration file. See config.example.yaml for more details.")
 
+	subcommandLikesDeleteUsingApiList := likes_delete_using_api_list.New()
+	flaggy.AttachSubcommand(subcommandLikesDeleteUsingApiList, 1)
+
 	subcommandTweetsDumpToJsonl := dump_to_jsonl.New(&inputFile, &outputFile)
-	flaggy.AttachSubcommand(subcommandTweetsDumpToJsonl, 1)
+	flaggy.AttachSubcommand(subcommandTweetsDumpToJsonl, 2)
 
 	subcommandTweetsDeleteUsingCsv := delete_using_csv.New(&inputFile)
-	flaggy.AttachSubcommand(subcommandTweetsDeleteUsingCsv, 1)
+	flaggy.AttachSubcommand(subcommandTweetsDeleteUsingCsv, 3)
 
 	subcommandTweetsToDeleteListFromJsonl := to_delete_list_from_jsonl.New(&inputFile, &outputFile, &expression)
-	flaggy.AttachSubcommand(subcommandTweetsToDeleteListFromJsonl, 1)
+	flaggy.AttachSubcommand(subcommandTweetsToDeleteListFromJsonl, 4)
 
 	flaggy.Parse()
 
-	if subcommandTweetsDumpToJsonl.Used {
+	if subcommandLikesDeleteUsingApiList.Used {
+		likes_delete_using_api_list.MustRun()
+	} else if subcommandTweetsDumpToJsonl.Used {
 		dump_to_jsonl.MustRun(inputFile, outputFile)
 	} else if subcommandTweetsDeleteUsingCsv.Used {
 		delete_using_csv.MustRun(inputFile)
